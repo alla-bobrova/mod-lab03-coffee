@@ -19,9 +19,9 @@ public:
     void cancel();
     void cook();
     void finish();
-    int cash;
-private:
     
+private:
+    int cash;
     std::vector<std::string> menu;
     std::vector<int> prices;
     STATES state;
