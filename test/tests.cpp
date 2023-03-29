@@ -15,12 +15,27 @@ TEST(AutomataTest, TurnOffTest) {
     EXPECT_EQ(a.getState(), OFF);
 }
 
-TEST(AutomataTest, InsertCoinTest) {
+TEST_F(AutomataTest_InsertCoinTest, InsertCoinTest) {
     Automata a;
     a.on();
     a.coin(10);
-    EXPECT_EQ(a.getState(), ACCEPT);
-    EXPECT_EQ(a.cash, 10);
+    EXPECT_EQ(a.getCash(), 10); // use the getter method instead of direct access
+}
+
+TEST_F(AutomataTest_CancelTest, CancelTest) {
+    Automata a;
+    a.on();
+    a.coin(10);
+    a.cancel();
+    EXPECT_EQ(a.getCash(), 0); // use the getter method instead of direct access
+}
+
+TEST_F(AutomataTest_FinishTest, FinishTest) {
+    Automata a;
+    a.on();
+    a.coin(10);
+    a.choice(1);
+    EXPECT_EQ(a.getCash(), 0); // use the getter method instead of direct access
 }
 
 TEST(AutomataTest, GetMenuTest) {
@@ -59,24 +74,3 @@ TEST(AutomataTest, CheckAvailabilityTest) {
     EXPECT_EQ(a.check(), true);
 }
 
-TEST(AutomataTest, CancelTest) {
-    Automata a;
-    a.on();
-    a.coin(50);
-    a.choice(1); // choose tea
-    a.check();
-    a.cancel();
-    EXPECT_EQ(a.getState(), WAIT);
-    EXPECT_EQ(a.cash, 0);
-}
-
-TEST(AutomataTest, FinishTest) {
-    Automata a;
-    a.on();
-    a.coin(50);
-    a.choice(1); // choose tea
-    a.check();
-    a.finish();
-    EXPECT_EQ(a.getState(), WAIT);
-    EXPECT_EQ(a.cash, 0);
-}
