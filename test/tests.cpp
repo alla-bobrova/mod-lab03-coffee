@@ -1,67 +1,78 @@
 // Copyright 2022 GHA Test Team
-#include <gtest/gtest.h>
 #include "Automata.h"
+#include <gtest/gtest.h>
 
-TEST(AutomataTest, test_on) {
-    Automata a;
-    a.on();
-    EXPECT_EQ(a.getState(), WAIT);
+class AutomataTest : public ::testing::Test {
+protected:
+    Automata automata;
+};
+
+TEST_F(AutomataTest, On) {
+    automata.on();
+    EXPECT_EQ(automata.getState(), WAIT);
+    automata.on();
+    EXPECT_EQ(automata.getState(), WAIT);
 }
 
-TEST(AutomataTest, test_off) {
-    Automata a;
-    a.off();
-    EXPECT_EQ(a.getState(), OFF);
+TEST_F(AutomataTest, Off) {
+    automata.off();
+    EXPECT_EQ(automata.getState(), OFF);
+    automata.on();
+    automata.off();
+    EXPECT_EQ(automata.getState(), OFF);
+    automata.choice(1);
+    automata.off();
+    EXPECT_EQ(automata.getState(), CHECK);
 }
 
-TEST(AutomataTest, test_coin) {
-    Automata a;
-    a.coin(50);
-    EXPECT_EQ(a.getCash(), 50);
+TEST_F(AutomataTest, Coin) {
+    automata.coin(10);
+    EXPECT_EQ(automata.getState(), WAIT);
+    EXPECT_EQ(automata.cash, 10);
+    automata.choice(1);
+    automata.coin(20);
+    EXPECT_EQ(automata.getState(), ACCEPT);
+    EXPECT_EQ(automata.cash, 30);
 }
 
-TEST(AutomataTest, test_getMenu) {
-    Automata a;
-    a.getMenu();
-    std::vector<std::string> menu = a.getMenu();
-    EXPECT_EQ(menu.size(), 3);
-    EXPECT_EQ(menu[0], "Coffee");
-    EXPECT_EQ(menu[1], "Tea");
-    EXPECT_EQ(menu[2], "Cocoa");
+TEST_F(AutomataTest, GetMenu) {
+    automata.getMenu();
+    EXPECT_EQ(automata.getState(), WAIT);
 }
 
-TEST(AutomataTest, test_choice) {
-    Automata a;
-    a.getMenu();
-    a.coin(50);
-    a.choice(0);
-    EXPECT_EQ(a.getState(), CHECK);
-    EXPECT_EQ(a.check(), false);
-    a.coin(50);
-    EXPECT_EQ(a.check(), true);
-    a.cook();
-    EXPECT_EQ(a.getState(), WAIT);
-    EXPECT_EQ(a.getCash(), 0);
+TEST_F(AutomataTest, Choice) {
+    automata.choice(0);
+    EXPECT_EQ(automata.getState(), WAIT);
+    automata.choice(10);
+    EXPECT_EQ(automata.getState(), WAIT);
+    automata.choice(1);
+    EXPECT_EQ(automata.getState(), ACCEPT);
+    EXPECT_EQ(automata.sum, 50);
 }
 
-TEST(AutomataTest, test_cancel) {
-    Automata a;
-    a.getMenu();
-    a.coin(50);
-    a.choice(0);
-    a.cancel();
-    EXPECT_EQ(a.getState(), WAIT);
-    EXPECT_EQ(a.getCash(), 50);
+TEST_F(AutomataTest, Check) {
+    EXPECT_FALSE(automata.check());
+    automata.choice(1);
+    automata.coin(20);
+    EXPECT_TRUE(automata.check());
 }
 
-TEST(AutomataTest, test_finish) {
-    Automata a;
-    a.getMenu();
-    a.coin(50);
-    a.choice(0);
-    a.coin(50);
-    a.cook();
-    a.finish();
-    EXPECT_EQ(a.getState(), WAIT);
-    EXPECT_EQ(a.getCash(), 0);
+TEST_F(AutomataTest, Cancel) {
+    automata.choice(1);
+    automata.coin(20);
+    automata.check();
+    automata.cancel();
+    EXPECT_EQ(automata.getState(), WAIT);
+    EXPECT_EQ(automata.cash, 0);
+    EXPECT_EQ(automata.choice_, 0);
+}
+
+TEST_F(AutomataTest, Cook) {
+    automata.choice(1);
+    automata.coin(50);
+    automata.check();
+    automata.cook();
+    EXPECT_EQ(automata.getState(), WAIT);
+    EXPECT_EQ(automata.cash, 0);
+    EXPECT_EQ(automata.choice_, 0);
 }
