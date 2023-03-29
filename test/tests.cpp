@@ -22,7 +22,7 @@ TEST(AutomataTest, test_coin) {
 
 TEST(AutomataTest, test_getMenu) {
     Automata a;
-    a.etMenu();
+    a.getMenu();
     std::vector<std::string> menu = a.getMenu();
     EXPECT_EQ(menu.size(), 3);
     EXPECT_EQ(menu[0], "Coffee");
@@ -32,7 +32,7 @@ TEST(AutomataTest, test_getMenu) {
 
 TEST(AutomataTest, test_choice) {
     Automata a;
-    a.etMenu();
+    a.getMenu();
     a.coin(50);
     a.choice(0);
     EXPECT_EQ(a.getState(), CHECK);
@@ -46,7 +46,7 @@ TEST(AutomataTest, test_choice) {
 
 TEST(AutomataTest, test_cancel) {
     Automata a;
-    a.etMenu();
+    a.getMenu();
     a.coin(50);
     a.choice(0);
     a.cancel();
@@ -56,7 +56,7 @@ TEST(AutomataTest, test_cancel) {
 
 TEST(AutomataTest, test_finish) {
     Automata a;
-    a.etMenu();
+    a.getMenu();
     a.coin(50);
     a.choice(0);
     a.coin(50);
