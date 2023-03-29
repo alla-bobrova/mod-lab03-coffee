@@ -79,3 +79,10 @@ void Automata::cook() {
         state = WAIT;
     }
 }
+void Automata::finish() {
+    cash -= prices[choiceDrink];
+    state = WAIT;
+    cout << "Спасибо за покупку! Заберите свой \"" << menu[choiceDrink] << "\".\n";
+}
+
+
