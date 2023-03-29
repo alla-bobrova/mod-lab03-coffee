@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 class Automata {
 public:
     Automata();
@@ -14,8 +16,8 @@ public:
     void cook();
     void finish();
 private:
-    std::vector<std::string> menu;
-    std::vector<int> prices;
+    vector<string> menu;
+    vector<int> prices;
     int balance = 0;
     int choice = 0;
 };
