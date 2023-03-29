@@ -1,76 +1,37 @@
 // Copyright 2022 GHA Test Team
+#include <gtest/gtest.h>
 #include "Automata.h"
-#include "gtest/gtest.h"
 
-TEST(AutomataTest, TurnOnTest) {
+TEST(task1, test1) {
     Automata a;
-    a.on();
-    EXPECT_EQ(a.getState(), WAIT);
+    EXPECT_EQ(Automata::State::OFF, a.getState());
 }
 
-TEST(AutomataTest, TurnOffTest) {
+TEST(task2, test2) {
     Automata a;
     a.on();
+    EXPECT_EQ(Automata::State::WAIT, a.getState());
     a.off();
-    EXPECT_EQ(a.getState(), OFF);
+    EXPECT_EQ(Automata::State::OFF, a.getState());
 }
 
-TEST_F(AutomataTest_InsertCoinTest, InsertCoinTest) {
+TEST(task3, test3) {
     Automata a;
     a.on();
-    a.coin(10);
-    EXPECT_EQ(a.getCash(), 10); // use the getter method instead of direct access
+    a.coin(100);
+    a.choice(0);
+    ASSERT_EQ(a.getState(), Automata::State::CHECK);
+    ASSERT_TRUE(a.check());
+    ASSERT_EQ(a.getState(), Automata::State::COOK);
 }
 
-TEST_F(AutomataTest_CancelTest, CancelTest) {
-    Automata a;
-    a.on();
-    a.coin(10);
-    a.cancel();
-    EXPECT_EQ(a.getCash(), 0); // use the getter method instead of direct access
-}
-
-TEST_F(AutomataTest_FinishTest, FinishTest) {
-    Automata a;
-    a.on();
-    a.coin(10);
-    a.choice(1);
-    EXPECT_EQ(a.getCash(), 0); // use the getter method instead of direct access
-}
-
-TEST(AutomataTest, GetMenuTest) {
-    Automata a;
-    std::stringstream ss;
-    std::streambuf* old_cout = std::cout.rdbuf(ss.rdbuf());
-    a.getMenu();
-    std::cout.rdbuf(old_cout); // restore cout buffer
-    std::string expected_output =
-        "Меню напитков:\n"
-        "1. Кофе - 50 рублей.\n"
-        "2. Чай - 30 рублей.\n"
-        "3. Какао - 40 рублей.\n";
-    EXPECT_EQ(ss.str(), expected_output);
-}
-
-TEST(AutomataTest, ChooseDrinkTest) {
+TEST(task4, test4) {
     Automata a;
     a.on();
     a.coin(50);
-    a.choice(1); // choose tea
-    EXPECT_EQ(a.getState(), CHECK);
+    a.choice(0);
+    ASSERT_EQ(Automata::State::ACCEPT, a.getState());
+    int refund = a.cancel();
+    ASSERT_EQ(50, refund);
+    ASSERT_EQ(Automata::State::WAIT, a.getState());
 }
-
-TEST(AutomataTest, CheckAvailabilityTest) {
-    Automata a;
-    a.on();
-    a.coin(10);
-    a.choice(1); // choose tea
-    EXPECT_EQ(a.check(), false);
-    a.coin(20);
-    EXPECT_EQ(a.check(), false);
-    a.coin(10);
-    EXPECT_EQ(a.check(), false);
-    a.coin(30);
-    EXPECT_EQ(a.check(), true);
-}
-
