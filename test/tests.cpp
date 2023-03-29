@@ -1,97 +1,82 @@
 // Copyright 2022 GHA Test Team
-#include "Automata.h"	
 #include "Automata.h"
+#include "gtest/gtest.h"
 
-TEST(AutomataTest, TestDefaultConstructor) {
-    Automata a;
-    EXPECT_EQ(a.getState(), STATES::OFF);
-}
-
-TEST(AutomataTest, TestOn) {
+TEST(AutomataTest, TurnOnTest) {
     Automata a;
     a.on();
-    EXPECT_EQ(a.getState(), STATES::WAIT);
-    a.on(); // already on
-    EXPECT_EQ(a.getState(), STATES::WAIT);
+    EXPECT_EQ(a.getState(), WAIT);
 }
 
-TEST(AutomataTest, TestOff) {
+TEST(AutomataTest, TurnOffTest) {
     Automata a;
-    a.off(); // already off
-    EXPECT_EQ(a.getState(), STATES::OFF);
     a.on();
     a.off();
-    EXPECT_EQ(a.getState(), STATES::OFF);
+    EXPECT_EQ(a.getState(), OFF);
 }
 
-TEST(AutomataTest, TestCoin) {
+TEST(AutomataTest, InsertCoinTest) {
     Automata a;
+    a.on();
     a.coin(10);
-    EXPECT_EQ(a.getState(), STATES::ACCEPT);
+    EXPECT_EQ(a.getState(), ACCEPT);
+    EXPECT_EQ(a.cash, 10);
+}
+
+TEST(AutomataTest, GetMenuTest) {
+    Automata a;
+    std::stringstream ss;
+    std::streambuf* old_cout = std::cout.rdbuf(ss.rdbuf());
+    a.getMenu();
+    std::cout.rdbuf(old_cout); // restore cout buffer
+    std::string expected_output =
+        "Меню напитков:\n"
+        "1. Кофе - 50 рублей.\n"
+        "2. Чай - 30 рублей.\n"
+        "3. Какао - 40 рублей.\n";
+    EXPECT_EQ(ss.str(), expected_output);
+}
+
+TEST(AutomataTest, ChooseDrinkTest) {
+    Automata a;
+    a.on();
+    a.coin(50);
+    a.choice(1); // choose tea
+    EXPECT_EQ(a.getState(), CHECK);
+}
+
+TEST(AutomataTest, CheckAvailabilityTest) {
+    Automata a;
+    a.on();
+    a.coin(10);
+    a.choice(1); // choose tea
+    EXPECT_EQ(a.check(), false);
     a.coin(20);
-    EXPECT_EQ(a.getState(), STATES::ACCEPT);
-    a.on();
-    a.coin(50); // cannot add coins in WAIT state
-    EXPECT_EQ(a.getState(), STATES::WAIT);
+    EXPECT_EQ(a.check(), false);
+    a.coin(10);
+    EXPECT_EQ(a.check(), false);
+    a.coin(30);
+    EXPECT_EQ(a.check(), true);
 }
 
-TEST(AutomataTest, TestChoice) {
+TEST(AutomataTest, CancelTest) {
     Automata a;
-    a.choice(2); // cannot choose in ACCEPT state
-    EXPECT_EQ(a.getState(), STATES::WAIT);
     a.on();
-    a.choice(0); // wrong drink number
-    EXPECT_EQ(a.getState(), STATES::WAIT);
-    a.choice(4); // wrong drink number
-    EXPECT_EQ(a.getState(), STATES::WAIT);
-    a.choice(1);
-    EXPECT_EQ(a.getState(), STATES::CHECK);
-}
-
-TEST(AutomataTest, TestCheck) {
-    Automata a;
-    a.check(); // cannot check in WAIT state
-    EXPECT_EQ(a.getState(), STATES::WAIT);
-    a.on();
-    a.check(); // cannot check in ACCEPT state
-    EXPECT_EQ(a.getState(), STATES::ACCEPT);
-    a.choice(2);
-    a.check();
-    EXPECT_EQ(a.getState(), STATES::COOK);
-}
-
-TEST(AutomataTest, TestCancel) {
-    Automata a;
-    a.cancel(); // cannot cancel in WAIT state
-    EXPECT_EQ(a.getState(), STATES::WAIT);
-    a.on();
-    a.cancel(); // can cancel in WAIT state
-    EXPECT_EQ(a.getState(), STATES::WAIT);
-    a.choice(3);
+    a.coin(50);
+    a.choice(1); // choose tea
     a.check();
     a.cancel();
-    EXPECT_EQ(a.getState(), STATES::WAIT);
+    EXPECT_EQ(a.getState(), WAIT);
+    EXPECT_EQ(a.cash, 0);
 }
 
-TEST(AutomataTest, TestCook) {
+TEST(AutomataTest, FinishTest) {
     Automata a;
-    a.cook(); // cannot cook in WAIT state
-    EXPECT_EQ(a.getState(), STATES::WAIT);
     a.on();
-    a.cook(); // cannot cook in CHECK state
-    EXPECT_EQ(a.getState(), STATES::CHECK);
-    a.choice(1);
-    a.cook(); // can cook in COOK state
-    EXPECT_EQ(a.getState(), STATES::WAIT);
-}
-
-TEST(AutomataTest, TestFinish) {
-    Automata a;
-    a.finish(); // cannot finish in COOK state
-    EXPECT_EQ(a.getState(), STATES::WAIT);
-    a.on();
-    a.choice(3);
+    a.coin(50);
+    a.choice(1); // choose tea
     a.check();
-    a.finish(); // can finish in COOK state
-    EXPECT_EQ(a.getState(), STATES::WAIT);
+    a.finish();
+    EXPECT_EQ(a.getState(), WAIT);
+    EXPECT_EQ(a.cash, 0);
 }
