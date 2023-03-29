@@ -24,7 +24,6 @@ private:
     int cash;
     std::string menu[3] = { "Чай", "Кофе", "Горячий шоколад" };
     int prices[3] = { 50, 70, 80 };
-    const int menuSize = sizeof(menu) / sizeof(menu[0]);
     STATES state;
     int choiceDrink;
 };
