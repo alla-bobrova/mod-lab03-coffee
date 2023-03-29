@@ -8,7 +8,7 @@ enum STATES { OFF, WAIT, ACCEPT, CHECK, COOK };
 class Automata {
 public:
     Automata();
-
+    int getCash() const { return cash; }
     void on();
     void off();
     void coin(int money);
