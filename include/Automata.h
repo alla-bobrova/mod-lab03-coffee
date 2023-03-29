@@ -1,23 +1,18 @@
 #pragma once
-#include <string>
-#include <vector>
-
-using namespace std;
 
 class Automata {
 public:
-    Automata();
     void on();
     void off();
-    void coin(int coins);
+    void coin(int money);
     void printMenu();
-    void select(int item);
-    void cancel();
-    void cook();
-    void finish();
+    void choice(int num);
+    void check();
+    void getMenu(); // добавляем метод
 private:
-    vector<string> menu;
-    vector<int> prices;
-    int balance = 0;
-    int choice = 0;
+    int state;
+    int cash;
+    int prices[4] = {60, 100, 120, 80};
+    int choice; // изменяем доступ на public
+    std::string menu[4] = {"Espresso", "Americano", "Latte", "Cappuccino"};
 };
