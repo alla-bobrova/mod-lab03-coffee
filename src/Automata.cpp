@@ -1,122 +1,123 @@
+#include "Automata.h"
 #include <iostream>
-#include <string>
-using namespace std;
 
-enum STATES {OFF, ON, ACCEPT, CHECK, COOK};
+Automata::Automata() {
+    cash = 0;
+    state = OFF;
+    sum = 0;
+    choice_ = 0;
+}
 
-class Automata {
-private:
-    int cash;
-    string menu[3] = {"Coffee", "Tea", "Milk"};
-    int prices[3] = {50, 30, 40};
-    STATES state;
+void Automata::on() {
+    if (state == OFF) {
+        state = WAIT;
+        std::cout << "The automata is on." << std::endl;
+    }
+    else {
+        std::cout << "The automata is already on." << std::endl;
+    }
+}
 
-public:
-    Automata() {
-        cash = 0;
+void Automata::off() {
+    if (state == OFF) {
+        std::cout << "The automata is already off." << std::endl;
+    }
+    else if (state == WAIT) {
         state = OFF;
+        std::cout << "The automata is off." << std::endl;
     }
+    else {
+        std::cout << "Please finish the current transaction before turning off the automata." << std::endl;
+    }
+}
 
-    void on() {
-        if (state == OFF) {
-            state = ON;
-            cout << "Automata is on\n";
+void Automata::coin(int money) {
+    if (state == WAIT) {
+        cash += money;
+        std::cout << "Cash balance: " << cash << std::endl;
+    }
+    else {
+        std::cout << "Please make your choice first." << std::endl;
+    }
+}
+
+void Automata::getMenu() {
+    if (state == WAIT) {
+        std::cout << "Menu:" << std::endl;
+        for (int i = 0; i < menu.size(); i++) {
+            std::cout << i+1 << ". " << menu[i] << " - " << prices[i] << " rubles" << std::endl;
         }
     }
-
-    void off() {
-        if (state == ON) {
-            state = OFF;
-            cout << "Automata is off\n";
-        }
+    else {
+        std::cout << "Please make your choice first." << std::endl;
     }
+}
 
-    void coin(int sum) {
-        if (state == ACCEPT) {
-            cash += sum;
-            cout << "Added " << sum << " to cash\n";
+STATES Automata::getState() {
+    return state;
+}
+
+void Automata::choice(int option) {
+    if (state == WAIT) {
+        if (option < 1 || option > menu.size()) {
+            std::cout << "Invalid choice." << std::endl;
         }
-    }
-
-    void getMenu() {
-        if (state == ACCEPT) {
-            cout << "Menu:\n";
-            for (int i = 0; i < 3; i++) {
-                cout << i + 1 << ". " << menu[i] << " - " << prices[i] << " rubles\n";
-            }
-        }
-    }
-
-    void getState() {
-        cout << "Current state is ";
-        switch (state) {
-            case OFF:
-                cout << "OFF\n";
-                break;
-            case ON:
-                cout << "ON\n";
-                break;
-            case ACCEPT:
-                cout << "ACCEPT\n";
-                break;
-            case CHECK:
-                cout << "CHECK\n";
-                break;
-            case COOK:
-                cout << "COOK\n";
-                break;
-        }
-    }
-
-    void choice(int n) {
-        if (state == ACCEPT) {
-            if (n >= 1 && n <= 3) {
-                int price = prices[n - 1];
-                if (cash >= price) {
-                    state = CHECK;
-                    cout << "Selected " << menu[n - 1] << " for " << price << " rubles\n";
-                } else {
-                    cout << "Not enough money\n";
-                }
-            } else {
-                cout << "Invalid choice\n";
-            }
-        }
-    }
-
-    void check() {
-        if (state == CHECK) {
-            cout << "Checking payment...\n";
-            if (cash >= prices[state - 1]) {
-                state = COOK;
-                cout << "Payment accepted\n";
-                cook();
-            } else {
-                cout << "Not enough money\n";
-                state = ACCEPT;
-            }
-        }
-    }
-
-    void cancel() {
-        if (state == CHECK || state == COOK) {
-            int change = cash;
-            cash = 0;
+        else {
+            choice_ = option;
             state = ACCEPT;
-            cout << "Canceled. Returning " << change << " rubles\n";
+            sum = prices[option-1];
+            std::cout << "You have chosen " << menu[option-1] << "." << std::endl;
         }
     }
-
-    void cook() {
-        cout << "Cooking...\n";
-        cout << "Your drink is ready. Enjoy!\n";
-        cash -= prices[state - 1];
-        finish();
+    else {
+        std::cout << "Please finish the current transaction before making a new choice." << std::endl;
     }
+}
 
-    void finish() {
-        state = ACCEPT;
-        cout << "Transaction complete. Returning to menu\n";
+bool Automata::check() {
+    if (state == ACCEPT) {
+        if (cash < sum) {
+            std::cout << "Not enough money. Please insert more." << std::endl;
+            return false;
+        }
+        else {
+            state = CHECK;
+            std::cout << "Please wait. Checking the availability of ingredients." << std::endl;
+            return true;
+        }
     }
-};
+    else {
+        std::cout << "Please make your choice first." << std::endl;
+        return false;
+    }
+}
 
+void Automata::cancel() {
+    if (state == ACCEPT || state == CHECK) {
+        std::cout << "Transaction canceled. Returning " << cash << " rubles." << std::endl;
+        cash = 0;
+        state = WAIT;
+        sum = 0;
+        choice_ = 0;
+    }
+    else {
+        std::cout << "Please make your choice first." << std::endl;
+    }
+}
+
+void Automata::cook() {
+    if (state == CHECK) {
+        state = COOK;
+        std::cout << "Making your " << menu[choice_ - 1] << "...\n";
+std::cout << "Please, wait...\n";
+std::this_thread::sleep_for(std::chrono::seconds(5)); // имитация процесса приготовления напитка в течение 5 секунд
+std::cout << "Your " << menu[choice_ - 1] << " is ready! Enjoy!\n";
+finish(); // завершение обслуживания пользователя
+}
+}
+
+void Automata::finish() {
+state = WAIT;
+cash = 0; // обнуление текущей суммы
+choice_ = 0; // обнуление выбора пользователя
+}
