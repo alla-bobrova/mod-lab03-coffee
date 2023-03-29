@@ -1,28 +1,21 @@
-#ifndef AUTOMATA_H
-#define AUTOMATA_H
-
-#include <vector> // added this line
-
-enum State { OFF, WAIT, ACCEPT, CHECK, COOK };
+#pragma once
+#include <string>
+#include <vector>
 
 class Automata {
 public:
     Automata();
     void on();
     void off();
-    void coin(int);
+    void coin(int coins);
     void printMenu();
-    void choice(int);
+    void select(int item);
     void cancel();
+    void cook();
+    void finish();
 private:
     std::vector<std::string> menu;
     std::vector<int> prices;
-    int cash;
-    State state; // fixed this line
-    void cook();
-    void finish();
-    void cancelTransaction();
-    int findMenuIndex(int);
+    int balance = 0;
+    int choice = 0;
 };
-
-#endif // AUTOMATA_H
