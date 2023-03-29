@@ -2,32 +2,38 @@
 #define AUTOMATA_H
 
 #include <string>
-#include <vector>
 
-enum STATES {OFF, WAIT, ACCEPT, CHECK, COOK};
+// Перечислимый тип для задания состояний автомата
+enum STATES {
+    OFF,
+    WAIT,
+    ACCEPT,
+    CHECK,
+    COOK
+};
 
 class Automata {
 public:
-    Automata();
-    void on();
-    void off();
-    void coin(int money);
-    void getMenu();
-    STATES getState();
-    void choice(int option);
-    bool check();
-    void cancel();
-    void cook();
-    void finish();
-    int cash; 
-    int choice_;
-    int sum;
+    Automata(); // Конструктор
+
+    void on(); // Включение автомата
+    void off(); // Выключение автомата
+    void coin(int money); // Занесение денег на счёт пользователем
+    void getMenu(); // Считывание меню с напитками и ценами для пользователя
+    void getState(); // Считывание текущего состояния для пользователя
+    void choice(int index); // Выбор напитка пользователем
+    void check(); // Проверка наличия необходимой суммы
+    void cancel(); // Отмена сеанса обслуживания пользователем
+    void cook(); // Имитация процесса приготовления напитка
+    void finish(); // Завершение обслуживания пользователя
+
 private:
-    
-    std::vector<std::string> menu;
-    std::vector<int> prices;
-    STATES state;
-   
+    int cash; // Текущая сумма на счету
+    std::string menu[3] = {"Чай", "Кофе", "Какао"}; // Меню напитков
+    int prices[3] = {30, 50, 40}; // Цены напитков
+    STATES state; // Текущее состояние автомата
+    int choiceIndex; // Индекс выбранного напитка
 };
 
 #endif // AUTOMATA_H
+
