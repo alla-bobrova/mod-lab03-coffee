@@ -19,14 +19,15 @@ public:
     void cancel();
     void cook();
     void finish();
-    
+    int cash; 
+    int choice_;
+    int sum;
 private:
-    int cash;
+    
     std::vector<std::string> menu;
     std::vector<int> prices;
     STATES state;
-    int choice_;
-    int sum;
+   
 };
 
 #endif // AUTOMATA_H
