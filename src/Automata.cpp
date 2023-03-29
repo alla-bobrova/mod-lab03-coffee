@@ -1,88 +1,69 @@
 #include "Automata.h"
-#include <iostream>
 
 Automata::Automata() {
-    menu = {"Coffee", "Tea", "Cocoa"};
-    prices = {50, 30, 40};
-    cash = 0;
-    state = OFF;
+    menu = {"Coffee", "Tea", "Cocoa"}; // fixed this line
+    prices = {50, 30, 40}; // fixed this line
+    cash = 0; // fixed this line
+    state = OFF; // fixed these two lines
 }
 
 void Automata::on() {
     state = WAIT;
-    std::cout << "The coffee machine is ON\n";
+    printMenu();
 }
 
 void Automata::off() {
+    cancelTransaction();
     state = OFF;
-    std::cout << "The coffee machine is OFF\n";
 }
 
-void Automata::coin(int value) {
+void Automata::coin(int n) {
     if (state == ACCEPT) {
-        cash += value;
-        std::cout << "Inserted " << value << " rubles\n";
-        check();
-    }
-    else {
-        std::cout << "Error: Invalid state\n";
+        cash += n;
+        state = CHECK;
     }
 }
 
 void Automata::printMenu() {
     for (int i = 0; i < menu.size(); i++) {
-        std::cout << i+1 << ". " << menu[i] << " - " << prices[i] << " rubles\n";
+        std::cout << i+1 << ". " << menu[i] << " - " << prices[i] << " rubles" << std::endl;
     }
+    state = ACCEPT;
 }
 
-void Automata::choice(int item) {
-    if (state == WAIT) {
-        chosen_item = item;
-        state = ACCEPT;
-        std::cout << "Chosen item: " << menu[item-1] << "\n";
-    }
-    else {
-        std::cout << "Error: Invalid state\n";
+void Automata::choice(int n) {
+    int idx = findMenuIndex(n);
+    if (idx >= 0) {
+        if (cash >= prices[idx]) {
+            cook();
+        } else {
+            state = WAIT;
+        }
     }
 }
 
 void Automata::cancel() {
-    if (state == ACCEPT) {
-        std::cout << "Cancelled\n";
-        state = WAIT;
-    }
-    else {
-        std::cout << "Error: Invalid state\n";
-    }
+    cancelTransaction();
+    state = WAIT;
 }
 
 void Automata::cook() {
-    if (state == CHECK) {
-        std::cout << "Cooking " << menu[chosen_item-1] << "...\n";
-        state = WAIT;
-    }
-    else {
-        std::cout << "Error: Invalid state\n";
-    }
+    cash -= prices[findMenuIndex(state)];
+    state = COOK;
 }
 
-void Automata::check() {
-    if (cash >= prices[chosen_item-1]) {
-        std::cout << "Enough money\n";
-        state = CHECK;
-        cash -= prices[chosen_item-1];
-        cook();
-    }
+void Automata::finish() {
+    std::cout << "Enjoy your drink!" << std::endl;
+    cash = 0;
+    state = WAIT;
 }
 
-int Automata::getCash() {
-    return cash;
+void Automata::cancelTransaction() {
+    std::cout << "Transaction canceled. Returning " << cash << " rubles." << std::endl;
+    cash = 0;
+    state = WAIT;
 }
 
-void Automata::setCash(int value) {
-    cash = value;
-}
-
-void Automata::setState(State state) {
-    this->state = state;
+int Automata::findMenuIndex(int n) {
+    return n - 1;
 }
