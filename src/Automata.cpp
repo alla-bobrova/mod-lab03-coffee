@@ -1,4 +1,6 @@
 #include "Automata.h"
+#inclde <iostream>
+using namespace std;
 
 Automata::Automata() {
     state = STATES::OFF;
