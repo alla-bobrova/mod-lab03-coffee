@@ -2,30 +2,30 @@
 #define AUTOMATA_H
 
 #include <string>
+#include <vector>
 
-enum STATES { OFF, WAIT, ACCEPT, CHECK, COOK };
+enum STATES {OFF, WAIT, ACCEPT, CHECK, COOK};
 
 class Automata {
 public:
     Automata();
-    int getCash() const { return cash; }
     void on();
     void off();
     void coin(int money);
     void getMenu();
     STATES getState();
-    void choice(int drink);
+    void choice(int option);
     bool check();
     void cancel();
     void cook();
     void finish();
-
 private:
     int cash;
-    std::string menu[3] = { "Чай", "Кофе", "Горячий шоколад" };
-    int prices[3] = { 50, 70, 80 };
+    std::vector<std::string> menu;
+    std::vector<int> prices;
     STATES state;
-    int choiceDrink;
+    int choice_;
+    int sum;
 };
 
-#endif  // AUTOMATA_H
+#endif // AUTOMATA_H
