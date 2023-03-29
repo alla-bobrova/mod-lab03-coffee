@@ -40,13 +40,9 @@ void Automata::coin(int value) {
 }
 
 void Automata::getMenu() {
-    if (state == WAIT) {
-        std::cout << "Menu:\n";
-        for (int i = 0; i < menu.size(); i++) {
-            std::cout << i + 1 << ". " << menu[i] << " - " << prices[i] << " rubles\n";
-        }
-    } else {
-        std::cout << "Can't show menu in current state\n";
+    std::cout << "Menu:\n";
+    for (int i = 0; i < sizeof(menu) / sizeof(*menu); i++) {
+        std::cout << i+1 << ". " << menu[i] << " - " << prices[i] << " rub\n";
     }
 }
 
@@ -73,31 +69,20 @@ void Automata::getState() {
 }
 
 void Automata::choice(int item) {
-    if (state == WAIT) {
-        if (item >= 1 && item <= menu.size()) {
-            chosen_item = item;
-            state = ACCEPT;
-            std::cout << "You've chosen " << menu[item - 1] << ", price: " << prices[item - 1] << " rubles\n";
-        } else {
-            std::cout << "Invalid choice\n";
-        }
+    if (item >= 1 && item <= sizeof(menu) / sizeof(*menu)) {
+        chosen_item = item;
+        state = ACCEPT;
     } else {
-        std::cout << "Can't make a choice in current state\n";
+        std::cout << "Invalid item\n";
     }
 }
 
 bool Automata::check() {
-    if (state == CHECK) {
-        if (cash >= prices[chosen_item - 1]) {
-            state = COOK;
-            return true;
-        } else {
-            std::cout << "Not enough money\n";
-            state = ACCEPT;
-            return false;
-        }
+    if (cash >= prices[chosen_item-1]) {
+        state = CHECK;
+        return true;
     } else {
-        std::cout << "Can't check in current state\n";
+        std::cout << "Not enough money\n";
         return false;
     }
 }
