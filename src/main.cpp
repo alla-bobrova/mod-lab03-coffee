@@ -7,13 +7,11 @@ int main() {
     setlocale(LC_ALL, "Russian");
     Automata coffeeMachine;
     coffeeMachine.on();
-    coffeeMachine.coin(100);
-    coffeeMachine.getMenu();
-    coffeeMachine.choice(1);
+    coffeeMachine.getMenu(); // вызываем новый метод
+    coffeeMachine.choice = 1; // изменяем choice через доступный public член
     coffeeMachine.check();
-    coffeeMachine.cook();
-    coffeeMachine.finish();
     coffeeMachine.off();
-    return 0;
 
+    return 0;
 }
+
