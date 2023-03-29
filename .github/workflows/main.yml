@@ -1,0 +1,12 @@
+name: Demo Workflow
+on: workflow_dispatch
+jobs:
+  print:
+    rans-on:ubunty-latest
+    steps:
+      - name: Print to console
+        run: echo Hello GN Actions!
+      - name: Print a few lines
+        run: |
+          echo First line!
+          echo Second line!
