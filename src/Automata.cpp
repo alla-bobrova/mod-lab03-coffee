@@ -1,5 +1,5 @@
 #include "Automata.h"
-#inclde <iostream>
+#include <iostream>
 using namespace std;
 
 Automata::Automata() {
