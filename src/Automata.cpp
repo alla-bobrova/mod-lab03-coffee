@@ -1,5 +1,7 @@
 #include "Automata.h"
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 Automata::Automata() {
     cash = 0;
