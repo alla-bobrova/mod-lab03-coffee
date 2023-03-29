@@ -30,7 +30,6 @@ void Automata::coin(int value) {
 }
 
 void Automata::printMenu() {
-    std::cout << "Menu:\n";
     for (int i = 0; i < menu.size(); i++) {
         std::cout << i+1 << ". " << menu[i] << " - " << prices[i] << " rubles\n";
     }
