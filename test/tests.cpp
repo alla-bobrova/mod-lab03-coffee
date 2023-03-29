@@ -2,36 +2,72 @@
 #include <gtest/gtest.h>
 #include "Automata.h"
 
-TEST(task1, test1) {
-    Automata a;
-    EXPECT_EQ(Automata::State::OFF, a.getState());
-}
-
-TEST(task2, test2) {
+TEST(AutomataTest, On) {
     Automata a;
     a.on();
-    EXPECT_EQ(Automata::State::WAIT, a.getState());
-    a.off();
-    EXPECT_EQ(Automata::State::OFF, a.getState());
+    ASSERT_EQ(ON, a.getState());
 }
-
-TEST(task3, test3) {
+TEST(AutomataTest, CancelAfterCoin)
+{
     Automata a;
     a.on();
-    a.coin(100);
-    a.choice(0);
-    ASSERT_EQ(a.getState(), Automata::State::CHECK);
-    ASSERT_TRUE(a.check());
-    ASSERT_EQ(a.getState(), Automata::State::COOK);
+    a.coin(50);
+    a.cancel();
+    EXPECT_EQ(a.getState(), WAIT);
+    EXPECT_EQ(a.cash, 0);
 }
 
-TEST(task4, test4) {
+TEST(AutomataTest, CheckWithNoChoice)
+{
+    Automata a;
+    a.on();
+    a.coin(10);
+    a.check();
+    EXPECT_EQ(a.getState(), WAIT);
+    EXPECT_EQ(a.cash, 10);
+}
+
+TEST(AutomataTest, CheckWithEnoughMoney)
+{
     Automata a;
     a.on();
     a.coin(50);
     a.choice(0);
-    ASSERT_EQ(Automata::State::ACCEPT, a.getState());
-    int refund = a.cancel();
-    ASSERT_EQ(50, refund);
-    ASSERT_EQ(Automata::State::WAIT, a.getState());
+    a.check();
+    EXPECT_EQ(a.getState(), COOK);
+}
+
+TEST(AutomataTest, CheckWithNotEnoughMoney)
+{
+    Automata a;
+    a.on();
+    a.coin(10);
+    a.choice(0);
+    a.check();
+    EXPECT_EQ(a.getState(), WAIT);
+}
+
+TEST(AutomataTest, Cook)
+{
+    Automata a;
+    a.on();
+    a.coin(50);
+    a.choice(0);
+    a.check();
+    a.cook();
+    EXPECT_EQ(a.getState(), WAIT);
+    EXPECT_EQ(a.cash, 40);
+}
+
+TEST(AutomataTest, Finish)
+{
+    Automata a;
+    a.on();
+    a.coin(50);
+    a.choice(0);
+    a.check();
+    a.cook();
+    a.finish();
+    EXPECT_EQ(a.getState(), WAIT);
+    EXPECT_EQ(a.cash, 0);
 }
