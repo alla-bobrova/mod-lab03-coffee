@@ -1,32 +1,31 @@
-#ifndef AUTOMATA_H
-#define AUTOMATA_H
-
-#include <iostream>
-#include <vector>
+#pragma once
 #include <string>
 
-using namespace std;
+enum STATES {
+OFF,
+WAIT,
+ACCEPT,
+CHECK,
+COOK
+};
 
 class Automata {
 public:
-    Automata();
-    void on();
-    void off();
-    void coin(int);
-    void printMenu();
-    void choice(int);
-    void cancel();
-    void cook();
+Automata();
+void on();
+void off();
+void coin(int sum);
+void getMenu();
+void getState();
+void choice(int num);
+void check();
+void cancel();
+void cook();
+void finish();
 private:
-    int cash;
-    vector<string> menu;
-    vector<int> prices;
-    int choiceNumber;
-    int currentState;
-    bool isEnough(int);
-    void setState(int);
-    int getState();
-    void getMenu(vector<string>, vector<int>);
+STATES state;
+int cash;
+std::string menu[3] = {"Tea", "Coffee", "Milk"};
+int prices[3] = {10, 15, 20};
+int choice_num;
 };
-
-#endif // AUTOMATA_H
