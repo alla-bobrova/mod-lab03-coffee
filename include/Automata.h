@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+#ifndef AUTOMATA_H
+#define AUTOMATA_H
+#include <vector>
 
 enum STATES {
 OFF,
@@ -11,21 +14,23 @@ COOK
 
 class Automata {
 public:
-Automata();
-void on();
-void off();
-void coin(int sum);
-void getMenu();
-void getState();
-void choice(int num);
-void check();
-void cancel();
-void cook();
-void finish();
+    Automata();
+    void on();
+    void off();
+    void coin(int coin);
+    void printMenu();
+    void choice(int item);
+    bool check();
+    void cancel();
+    int getBalance();
+
 private:
-STATES state;
-int cash;
-std::string menu[3] = {"Tea", "Coffee", "Milk"};
-int prices[3] = {10, 15, 20};
-int choice_num;
+    std::vector<std::string> menu;
+    std::vector<int> prices;
+    int balance;
+    int chosen_item;
+    void cook();
 };
+
+#endif  // AUTOMATA_H
+
