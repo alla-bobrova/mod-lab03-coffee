@@ -1,8 +1,11 @@
+#ifndef AUTOMATA_H
+#define AUTOMATA_H
+
+#include <vector> // added this line
+
+enum State { OFF, WAIT, ACCEPT, CHECK, COOK };
 
 class Automata {
-private:
-    std::vector<std::string> menu;
-    std::vector<int> prices;
 public:
     Automata();
     void on();
@@ -11,9 +14,15 @@ public:
     void printMenu();
     void choice(int);
     void cancel();
+private:
+    std::vector<std::string> menu;
+    std::vector<int> prices;
+    int cash;
+    State state; // fixed this line
     void cook();
-    bool check();
     void finish();
-    void setCash(int);
-    void setState(State);
+    void cancelTransaction();
+    int findMenuIndex(int);
 };
+
+#endif // AUTOMATA_H
