@@ -1,4 +1,6 @@
 #include "Automata.h"
+#include <iostream>
+#include <vector>
 
 Automata::Automata() {
     cash = 0;
@@ -30,26 +32,7 @@ void Automata::getMenu(std::vector<std::string> menu, std::vector<int> prices) {
 }
 
 void Automata::getState() {
-    switch (state) {
-        case STATES::OFF:
-            std::cout << "Автомат выключен" << std::endl;
-            break;
-        case STATES::WAIT:
-            std::cout << "Ожидание действий пользователя" << std::endl;
-            break;
-        case STATES::ACCEPT:
-            std::cout << "Принятие денег" << std::endl;
-            break;
-        case STATES::CHECK:
-            std::cout << "Проверка суммы" << std::endl;
-            break;
-        case STATES::COOK:
-            std::cout << "Приготовление напитка" << std::endl;
-            break;
-        case STATES::FINISH:
-            std::cout << "Завершение обслуживания" << std::endl;
-            break;
-    }
+    return state;
 }
 
 void Automata::choice(int option) {
