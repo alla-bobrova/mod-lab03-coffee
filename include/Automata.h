@@ -1,4 +1,6 @@
 // Copyright 2022 UNN-IASR
+#ifndef INCLUDE_AUTOMATA_H_
+#define INCLUDE_AUTOMATA_H_
 #include<string>
 
 class Automata {
@@ -33,4 +35,4 @@ class Automata {
     std::string menu[MENU_SIZE] = { "Coffee", "Tea", "Milk" };
     double prices[MENU_SIZE] = { 11.5, 10.0, 20.0 };
 };
-
+#endif  // INCLUDE_AUTOMATA_H_
