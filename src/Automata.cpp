@@ -39,7 +39,6 @@ void Automata::getMenu() {
 }
 
 Automata::STATES Automata::getState() {
-    //std::cout << "State: " << state << "\n";
     return state;
 }
 
@@ -60,14 +59,18 @@ void Automata::choice(int drink) {
 }
 
 bool Automata::check() {
-    if (cash >= prices[chosenDrink]) {
-        return true;
+    if (state == ACCEPT) {
+        if (cash >= prices[chosenDrink]) {
+            state = COOK;
+            return true;
+        }
+        else {
+            state = ACCEPT;
+            std::cout << "Not enough money\n";
+            return false;
+        }
     }
-    else {
-        std::cout << "Not enough money\n";
-        state = WAIT;
-        return false;
-    }
+    return false;
 }
 
 void Automata::cancel() {
