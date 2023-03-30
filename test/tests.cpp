@@ -30,15 +30,6 @@ TEST(AutomataTest, Coin) {
     EXPECT_EQ(a.getCash(), 75);
 }
 
-TEST(AutomataTest, GetMenu) {
-    Automata a;
-    a.on();
-    testing::internal::CaptureStdout();
-    a.getMenu();
-    std::string output = testing::internal::GetCapturedStdout();
-    std::string expected = "Menu:\n1. Coffee - 50\n2. Tea - 30\n";
-    EXPECT_EQ(output, expected);
-}
 
 TEST(AutomataTest, Choice) {
     Automata a;
@@ -59,16 +50,22 @@ TEST(AutomataTest, CheckSuccess) {
     EXPECT_EQ(a.getState(), Automata::ACCEPT);
 }
 
+TEST(AutomataTest, GetMenu) {
+    Automata a;
+    a.on();
+    std::stringstream ss;
+    a.getMenu(ss);
+    EXPECT_EQ(ss.str(), "Menu:\n1. Coffee - 50\n2. Tea - 30\n");
+}
+
 TEST(AutomataTest, CheckFailure) {
     Automata a;
     a.on();
     a.coin(25);
-    a.choice(1);
-    testing::internal::CaptureStdout();
     EXPECT_FALSE(a.check());
-    std::string output = testing::internal::GetCapturedStdout();
-    std::string expected = "Not enough money\n";
-    EXPECT_EQ(output, expected);
+    std::stringstream ss;
+    a.getChoice(ss);
+    EXPECT_EQ(ss.str(), "Not enough money\n");
     EXPECT_EQ(a.getState(), Automata::WAIT);
 }
 
