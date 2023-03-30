@@ -2,47 +2,88 @@
 #include <iostream>
 
 Automata::Automata() {
-    menu = {"Coffee", "Tea", "Cocoa"};
-    prices = {50, 30, 40};
+    cash = 0;
+    state = OFF;
 }
 
 void Automata::on() {
-    std::cout << "Machine is on" << std::endl;
+    state = WAIT;
+    std::cout << "Automata is on\n";
 }
 
 void Automata::off() {
-    std::cout << "Machine is off" << std::endl;
+    state = OFF;
+    std::cout << "Automata is off\n";
 }
 
-void Automata::coin(int coins) {
-    balance += coins;
-}
-
-void Automata::printMenu() {
-    for (int i = 0; i < menu.size(); i++) {
-        std::cout << i+1 << ". " << menu[i] << " - " << prices[i] << " rubles" << std::endl;
+void Automata::coin(double money) {
+    if (state == WAIT) {
+        cash += money;
+        std::cout << "Cash balance: " << cash << "\n";
+    }
+    else {
+        std::cout << "Error: invalid state\n";
     }
 }
 
-void Automata::select(int item) {
-    if (item >= 1 && item <= menu.size()) {
-        choice = item;
-        std::cout << "Selected item: " << menu[choice-1] << std::endl;
-    } else {
-        std::cout << "Invalid item" << std::endl;
+void Automata::getMenu() {
+    if (state == WAIT) {
+        std::cout << "Menu:\n";
+        for (int i = 0; i < MENU_SIZE; ++i) {
+            std::cout << i + 1 << ". " << menu[i] << " - " << prices[i] << "\n";
+        }
+    }
+    else {
+        std::cout << "Error: invalid state\n";
+    }
+}
+
+void Automata::getState() {
+    std::cout << "State: " << state << "\n";
+}
+
+void Automata::choice(int drink) {
+    if (state == WAIT) {
+        if (drink > 0 && drink <= MENU_SIZE) {
+            chosenDrink = drink - 1;
+            state = ACCEPT;
+            std::cout << "You have chosen " << menu[chosenDrink] << "\n";
+        }
+        else {
+            std::cout << "Error: invalid drink number\n";
+        }
+    }
+    else {
+        std::cout << "Error: invalid state\n";
+    }
+}
+
+bool Automata::check() {
+    if (cash >= prices[chosenDrink]) {
+        return true;
+    }
+    else {
+        std::cout << "Not enough money\n";
+        state = WAIT;
+        return false;
     }
 }
 
 void Automata::cancel() {
-    std::cout << "Canceled" << std::endl;
-    balance = 0;
-    choice = 0;
+    cash = 0;
+    chosenDrink = -1;
+    state = WAIT;
+    std::cout << "Transaction canceled\n";
 }
 
 void Automata::cook() {
-    std::cout << "Cooking..." << std::endl;
+    state = COOK;
+    std::cout << "Preparing " << menu[chosenDrink] << "\n";
 }
 
 void Automata::finish() {
-    std::cout << "Enjoy your drink!" << std::endl;
+    cash -= prices[chosenDrink];
+    chosenDrink = -1;
+    state = WAIT;
+    std::cout << "Transaction complete\n";
 }
