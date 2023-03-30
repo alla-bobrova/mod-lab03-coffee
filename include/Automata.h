@@ -1,6 +1,5 @@
+// Copyright 2022 UNN-IASR
 #include<string>
-#ifndef AUTOMATA_H
-#define AUTOMATA_H
 
 class Automata {
  public:
@@ -35,4 +34,3 @@ class Automata {
     double prices[MENU_SIZE] = { 11.5, 10.0, 20.0 };
 };
 
-#endif // AUTOMATA_H
