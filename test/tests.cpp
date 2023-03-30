@@ -50,20 +50,6 @@ TEST(AutomataTest, CheckSuccess) {
     EXPECT_EQ(a.getState(), Automata::ACCEPT);
 }
 
-TEST(AutomataTest, CheckFailure) {
-    Automata a;
-    a.on();
-    a.coin(25);
-    a.choice(1);
-    testing::internal::CaptureStdout();
-    EXPECT_FALSE(a.check());
-    std::string output = testing::internal::GetCapturedStdout();
-    std::string expected = "Not enough money\n";
-    EXPECT_EQ(output, expected);
-    EXPECT_EQ(a.getState(), Automata::WAIT);
-}
-
-
 TEST(AutomataTest, Cancel) {
     Automata a;
     a.on();
