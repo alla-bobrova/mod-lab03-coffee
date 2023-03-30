@@ -1,3 +1,6 @@
+#include "Automata.h"
+#include <iostream>
+
 Automata::Automata() {
     cash = 0;
     state = OFF;
@@ -95,4 +98,3 @@ int Automata::getChosenDrink()
 {
     return chosenDrink;
 }
-
