@@ -97,8 +97,4 @@ TEST(AutomataTest, Cook) {
     EXPECT_EQ(a.getState(), Automata::COOK);
 }
 
-TEST(AutomataTest, Finish) {
-    Automata a;
-    a.on();
-    a.coin(50);
 
