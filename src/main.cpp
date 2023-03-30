@@ -1,3 +1,4 @@
+// Copyright 2022 UNN-IASR
 #include "Automata.h"
 #include <locale>
 #include <iostream>
@@ -14,11 +15,9 @@
       if (vendingMachine.check()) {
           vendingMachine.cook();
           vendingMachine.finish();
-      }
-      else {
+      } else {
           vendingMachine.cancel();
       }
-
       vendingMachine.off();
       return 0;
   }
