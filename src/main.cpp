@@ -1,17 +1,24 @@
 #include "Automata.h"
 #include <locale>
 #include <iostream>
-using namespace std;
 
-int main() {
-    setlocale(LC_ALL, "Russian");
-    Automata coffeeMachine;
-    coffeeMachine.on();
-    coffeeMachine.getMenu(); // вызываем новый метод
-    coffeeMachine.choice = 1; // изменяем choice через доступный public член
-    coffeeMachine.check();
-    coffeeMachine.off();
+  int main() { 
+      setlocale(LC_ALL, "Russian");
+      Automata vendingMachine;
+      vendingMachine.on();
+      vendingMachine.coin(0.5);
+      vendingMachine.coin(1.0);
+      vendingMachine.coin(0.5);
+      vendingMachine.getMenu();
+      vendingMachine.choice(0);
+      if (vendingMachine.check()) {
+          vendingMachine.cook();
+          vendingMachine.finish();
+      }
+      else {
+          vendingMachine.cancel();
+      }
 
-    return 0;
-}
-
+      vendingMachine.off();
+      return 0;
+  }
