@@ -1,6 +1,3 @@
-#include "Automata.h"
-#include <iostream>
-
 Automata::Automata() {
     cash = 0;
     state = OFF;
@@ -38,8 +35,9 @@ void Automata::getMenu() {
     }
 }
 
-void Automata::getState() {
-    std::cout << "State: " << state << "\n";
+Automata::STATES Automata::getState() {
+    //std::cout << "State: " << state << "\n";
+    return state;
 }
 
 void Automata::choice(int drink) {
@@ -87,3 +85,14 @@ void Automata::finish() {
     state = WAIT;
     std::cout << "Transaction complete\n";
 }
+
+double Automata::getCash()
+{
+    return cash;
+}
+
+int Automata::getChosenDrink()
+{
+    return chosenDrink;
+}
+
