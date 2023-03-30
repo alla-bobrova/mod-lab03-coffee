@@ -17,18 +17,25 @@ void Automata::off() {
 }
 
 void Automata::coin(double money) {
-    if (state == WAIT || state == CHECK) {
-        state = ACCEPT;
+    if (state == WAIT) {
+        cash += money;
         std::cout << "Cash balance: " << cash << "\n";
     }
-    cash += money;
+    else {
+        std::cout << "Error: invalid state\n";
+    }
 }
 
 void Automata::getMenu() {
-    std::cout << "Menu:\n";
-       for (int i = 0; i < MENU_SIZE; ++i) {
-           std::cout << i + 1 << ". " << menu[i] << " - " << prices[i] << "\n";
+    if (state == WAIT) {
+        std::cout << "Menu:\n";
+        for (int i = 0; i < MENU_SIZE; ++i) {
+            std::cout << i + 1 << ". " << menu[i] << " - " << prices[i] << "\n";
         }
+    }
+    else {
+        std::cout << "Error: invalid state\n";
+    }
 }
 
 Automata::STATES Automata::getState() {
@@ -36,48 +43,44 @@ Automata::STATES Automata::getState() {
 }
 
 void Automata::choice(int drink) {
-        if (state == ACCEPT) {
-        chosenDrink = drink;
-        if (cash >= prices[chosenDrink]) {
-            state = CHECK;
-            std::cout << "You have chosen " << menu[chosenDrink] << "\n";
-        } else {
+    if (state == WAIT) {
+        if (drink > 0 && drink <= MENU_SIZE) {
+            chosenDrink = drink - 1;
             state = ACCEPT;
-             std::cout << "Error: invalid drink number\n";
-        }
-    }
-}
-    
-
-bool Automata::check() {
-    if (state == CHECK) {
-        if (cash >= prices[chosenDrink]) {
-            cook();
-            return true;
+            std::cout << "You have chosen " << menu[chosenDrink] << "\n";
         }
         else {
-            return false;
+            std::cout << "Error: invalid drink number\n";
         }
     }
-    return false;
+    else {
+        std::cout << "Error: invalid state\n";
+    }
+}
+
+bool Automata::check() {
+    if (cash >= prices[chosenDrink]) {
+        return true;
+    }
+    else {
+        std::cout << "Not enough money\n";
+        state = WAIT;
+        return false;
+    }
 }
 
 void Automata::cancel() {
-    if (state == ACCEPT || state == CHECK || state == WAIT) {
-        cash = 0;
-        chosenDrink = -1;
-        state = WAIT;
-        std::cout << "Transaction canceled\n";
-    }
+    cash = 0;
+    chosenDrink = -1;
+    state = WAIT;
+    std::cout << "Transaction canceled\n";
 }
 
 void Automata::cook() {
-    if (state == CHECK) {
-        state = COOK;
-        std::cout << "Preparing " << menu[chosenDrink] << "\n";
-    }
+    state = COOK;
+    std::cout << "Preparing " << menu[chosenDrink] << "\n";
 }
-   
+
 void Automata::finish() {
     cash -= prices[chosenDrink];
     chosenDrink = -1;
