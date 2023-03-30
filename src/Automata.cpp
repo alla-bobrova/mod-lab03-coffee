@@ -20,8 +20,7 @@ void Automata::coin(double money) {
     if (state == WAIT) {
         cash += money;
         std::cout << "Cash balance: " << cash << "\n";
-    }
-    else {
+    } else {
         std::cout << "Error: invalid state\n";
     }
 }
@@ -32,8 +31,7 @@ void Automata::getMenu() {
         for (int i = 0; i < MENU_SIZE; ++i) {
             std::cout << i + 1 << ". " << menu[i] << " - " << prices[i] << "\n";
         }
-    }
-    else {
+    } else {
         std::cout << "Error: invalid state\n";
     }
 }
@@ -48,12 +46,10 @@ void Automata::choice(int drink) {
             chosenDrink = drink - 1;
             state = ACCEPT;
             std::cout << "You have chosen " << menu[chosenDrink] << "\n";
-        }
-        else {
+        } else {
             std::cout << "Error: invalid drink number\n";
         }
-    }
-    else {
+    } else {
         std::cout << "Error: invalid state\n";
     }
 }
@@ -61,8 +57,7 @@ void Automata::choice(int drink) {
 bool Automata::check() {
     if (cash >= prices[chosenDrink]) {
         return true;
-    }
-    else {
+    } else {
         std::cout << "Not enough money\n";
         state = WAIT;
         return false;
@@ -88,12 +83,10 @@ void Automata::finish() {
     std::cout << "Transaction complete\n";
 }
 
-double Automata::getCash()
-{
+double Automata::getCash() {
     return cash;
 }
 
-int Automata::getChosenDrink()
-{
+int Automata::getChosenDrink() {
     return chosenDrink;
 }
