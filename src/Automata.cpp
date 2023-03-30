@@ -59,14 +59,17 @@ void Automata::choice(int drink) {
 }
 
 bool Automata::check() {
-    if (cash < prices[chosenDrink]) {
-        std::cout << "Not enough money\n";
-        return false;
+    if (state == ACCEPT) {
+        if (cash >= prices[chosenDrink]) {
+            cook();
+            return true;
+        }
+        else {
+            state = ACCEPT;
+            return false;
+        }
     }
-    std::cout << "You have chosen " << menu[chosenDrink] << "\n";
-    cash -= prices[chosenDrink];
-    state = WAIT;
-    return true;
+    return false;
 }
 
 void Automata::cancel() {
