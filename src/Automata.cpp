@@ -63,10 +63,12 @@ bool Automata::check() {
 }
 
 void Automata::cancel() {
-    cash = 0;
-    chosenDrink = -1;
-    state = WAIT;
-    std::cout << "Transaction canceled\n";
+    if (state == ACCEPT || state == CHECK || state == WAIT) {
+        cash = 0;
+        chosenDrink = -1;
+        state = WAIT;
+        std::cout << "Transaction canceled\n";
+    }
 }
 
 void Automata::cook() {
