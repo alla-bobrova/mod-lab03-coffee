@@ -17,7 +17,7 @@ void Automata::off() {
 }
 
 void Automata::coin(double money) {
-    if (state == WAIT || state == ACCEPT)) {
+    if (state == WAIT || state == ACCEPT) {
         cash += money;
         state = ACCEPT;
         std::cout << "Cash balance: " << cash << "\n";
