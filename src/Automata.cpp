@@ -38,7 +38,7 @@ Automata::STATES Automata::getState() {
 void Automata::choice(int drink) {
         if (state == ACCEPT) {
         chosenDrink = drink;
-        if (cash >= prices[chosenDrin]) {
+        if (cash >= prices[chosenDrink]) {
             state = CHECK;
             std::cout << "You have chosen " << menu[chosenDrink] << "\n";
         } else {
