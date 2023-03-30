@@ -17,26 +17,18 @@ void Automata::off() {
 }
 
 void Automata::coin(double money) {
-    if (state == WAIT || state == ACCEPT) {
-        cash += money;
+    if (state == WAIT || state == CHECK) {
         state = ACCEPT;
         std::cout << "Cash balance: " << cash << "\n";
     }
-    else {
-        std::cout << "Error: invalid state\n";
-    }
+    cash += money;
 }
 
 void Automata::getMenu() {
-    if (state == WAIT) {
-        std::cout << "Menu:\n";
-        for (int i = 0; i < MENU_SIZE; ++i) {
-            std::cout << i + 1 << ". " << menu[i] << " - " << prices[i] << "\n";
+    std::cout << "Menu:\n";
+       for (int i = 0; i < MENU_SIZE; ++i) {
+           std::cout << i + 1 << ". " << menu[i] << " - " << prices[i] << "\n";
         }
-    }
-    else {
-        std::cout << "Error: invalid state\n";
-    }
 }
 
 Automata::STATES Automata::getState() {
@@ -44,24 +36,23 @@ Automata::STATES Automata::getState() {
 }
 
 void Automata::choice(int drink) {
-    if (state == ACCEPT) {
-        if (drink > 0 && drink <= MENU_SIZE) {
-            chosenDrink = drink - 1;
+        if (state == ACCEPT) {
+        chosenDrink = drink;
+        if (cash >= prices[chosenDrin]) {
             state = CHECK;
             std::cout << "You have chosen " << menu[chosenDrink] << "\n";
+        } else {
+            state = ACCEPT;
+             std::cout << "Error: invalid drink number\n";
         }
-        else {
-            std::cout << "Error: invalid drink number\n";
-        }
-    }
-    else {
-        std::cout << "Error: invalid state\n";
     }
 }
+    
 
 bool Automata::check() {
     if (state == CHECK) {
         if (cash >= prices[chosenDrink]) {
+            cook();
             return true;
         }
         else {
@@ -80,11 +71,11 @@ void Automata::cancel() {
 
 void Automata::cook() {
     if (state == CHECK) {
-    state = COOK;
-    std::cout << "Preparing " << menu[chosenDrink] << "\n";
+        state = COOK;
+        std::cout << "Preparing " << menu[chosenDrink] << "\n";
     }
 }
-
+   
 void Automata::finish() {
     cash -= prices[chosenDrink];
     chosenDrink = -1;
