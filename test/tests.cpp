@@ -2,77 +2,103 @@
 #include "Automata.h"
 #include <gtest/gtest.h>
 
-class AutomataTest : public ::testing::Test {
-protected:
-    Automata automata;
-};
-
-TEST_F(AutomataTest, On) {
-    automata.on();
-    EXPECT_EQ(automata.getState(), WAIT);
-    automata.on();
-    EXPECT_EQ(automata.getState(), WAIT);
+TEST(AutomataTest, DefaultConstructor) {
+    Automata a;
+    EXPECT_EQ(a.getState(), Automata::OFF);
+    EXPECT_EQ(a.getCash(), 0);
 }
 
-TEST_F(AutomataTest, Off) {
-    automata.off();
-    EXPECT_EQ(automata.getState(), OFF);
-    automata.on();
-    automata.off();
-    EXPECT_EQ(automata.getState(), OFF);
-    automata.choice(1);
-    automata.off();
-    EXPECT_EQ(automata.getState(), CHECK);
+TEST(AutomataTest, On) {
+    Automata a;
+    a.on();
+    EXPECT_EQ(a.getState(), Automata::WAIT);
 }
 
-TEST_F(AutomataTest, Coin) {
-    automata.coin(10);
-    EXPECT_EQ(automata.getState(), WAIT);
-    EXPECT_EQ(automata.cash, 10);
-    automata.choice(1);
-    automata.coin(20);
-    EXPECT_EQ(automata.getState(), ACCEPT);
-    EXPECT_EQ(automata.cash, 30);
+TEST(AutomataTest, Off) {
+    Automata a;
+    a.on();
+    a.off();
+    EXPECT_EQ(a.getState(), Automata::OFF);
 }
 
-TEST_F(AutomataTest, GetMenu) {
-    automata.getMenu();
-    EXPECT_EQ(automata.getState(), WAIT);
+TEST(AutomataTest, Coin) {
+    Automata a;
+    a.on();
+    a.coin(50);
+    EXPECT_EQ(a.getCash(), 50);
+    a.coin(25);
+    EXPECT_EQ(a.getCash(), 75);
 }
 
-TEST_F(AutomataTest, Choice) {
-    automata.choice(0);
-    EXPECT_EQ(automata.getState(), WAIT);
-    automata.choice(10);
-    EXPECT_EQ(automata.getState(), WAIT);
-    automata.choice(1);
-    EXPECT_EQ(automata.getState(), ACCEPT);
-    EXPECT_EQ(automata.sum, 50);
+TEST(AutomataTest, GetMenu) {
+    Automata a;
+    a.on();
+    testing::internal::CaptureStdout();
+    a.getMenu();
+    std::string output = testing::internal::GetCapturedStdout();
+    std::string expected = "Menu:\n1. Coffee - 50\n2. Tea - 30\n";
+    EXPECT_EQ(output, expected);
 }
 
-TEST_F(AutomataTest, Check) {
-    EXPECT_FALSE(automata.check());
-    automata.choice(1);
-    automata.coin(20);
-    EXPECT_TRUE(automata.check());
+TEST(AutomataTest, Choice) {
+    Automata a;
+    a.on();
+    testing::internal::CaptureStdout();
+    a.choice(1);
+    std::string output = testing::internal::GetCapturedStdout();
+    std::string expected = "You have chosen Coffee\n";
+    EXPECT_EQ(output, expected);
 }
 
-TEST_F(AutomataTest, Cancel) {
-    automata.choice(1);
-    automata.coin(20);
-    automata.check();
-    automata.cancel();
-    EXPECT_EQ(automata.getState(), WAIT);
-    EXPECT_EQ(automata.cash, 0);
-    EXPECT_EQ(automata.choice_, 0);
+TEST(AutomataTest, CheckSuccess) {
+    Automata a;
+    a.on();
+    a.coin(50);
+    a.choice(1);
+    EXPECT_TRUE(a.check());
+    EXPECT_EQ(a.getState(), Automata::ACCEPT);
 }
 
-TEST_F(AutomataTest, Cook) {
-    automata.choice(1);
-    automata.coin(50);
-    automata.check();
-    automata.cook();
-    EXPECT_EQ(automata.getState(), WAIT);
-    EXPECT_EQ(automata.cash, 0);
-    EXPECT_EQ(automata.choice_, 0);
+TEST(AutomataTest, CheckFailure) {
+    Automata a;
+    a.on();
+    a.coin(25);
+    a.choice(1);
+    testing::internal::CaptureStdout();
+    EXPECT_FALSE(a.check());
+    std::string output = testing::internal::GetCapturedStdout();
+    std::string expected = "Not enough money\n";
+    EXPECT_EQ(output, expected);
+    EXPECT_EQ(a.getState(), Automata::WAIT);
 }
+
+TEST(AutomataTest, Cancel) {
+    Automata a;
+    a.on();
+    a.coin(50);
+    a.choice(1);
+    a.check();
+    testing::internal::CaptureStdout();
+    a.cancel();
+    std::string output = testing::internal::GetCapturedStdout();
+    std::string expected = "Transaction canceled\n";
+    EXPECT_EQ(output, expected);
+    EXPECT_EQ(a.getState(), Automata::WAIT);
+    EXPECT_EQ(a.getCash(), 0);
+}
+
+TEST(AutomataTest, Cook) {
+    Automata a;
+    a.on();
+    a.coin(50);
+    a.choice(1);
+    a.check();
+    a.cook();
+    EXPECT_EQ(a.getState(), Automata::COOK);
+}
+
+TEST(AutomataTest, Finish) {
+    Automata a;
+    a.on();
+    a.coin(50);
+
