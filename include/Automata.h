@@ -22,6 +22,7 @@ public:
     OFF,
     WAIT,
     ACCEPT,
+    CHECK,
     COOK
     };
     double getCash();
