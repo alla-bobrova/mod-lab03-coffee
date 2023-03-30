@@ -3,7 +3,7 @@
 #include <locale>
 #include <iostream>
 
-  int main() { 
+  int main() {
       setlocale(LC_ALL, "Russian");
       Automata vendingMachine;
       vendingMachine.on();
